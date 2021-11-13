@@ -1,11 +1,12 @@
 {
-  "name": "cnafsd-lcmaps",
+  "name": "iwai-lcmaps",
   "version": "0.3.2",
   "author": "cnafsd",
   "summary": "Install and configure LCMAPS and pool accounts",
   "license": "Apache-2.0",
-  "source": "https://github.com/italiangrid/puppet-lcmaps",
-  "project_page": "https://github.com/italiangrid/puppet-lcmaps",
+  "source": "https://github.com/goiwai/puppet-lcmaps",
+  "project_page": "https://github.com/goiwai/puppet-lcmaps",
+  "issues_url": "https://github.com/goiwai/puppet-lcmaps/issues",
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
