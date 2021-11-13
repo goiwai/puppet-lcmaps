@@ -12,6 +12,14 @@
 # @param pools
 #   The Array of pool accounts.
 #
+# @param create_pool_user
+#   If true (default), attempts to create pool accounts.
+#   If false, skip creating pool accounts -- a special switch for KEKCC, where the necessary pool accounts have already been created.
+#
+# @param create_pool_group
+#   If true (default), attempts to create pool accounts.
+#   If false, skip creating groups for pool accounts -- a special switch for KEKCC, where the necessary pool accounts have already been created.
+#
 # @param generate_gridmapfile
 #
 # @param gridmapfile_file
@@ -68,6 +76,8 @@ class lcmaps (
   String $gridmapdir_mode,
 
   Array[Lcmaps::PoolData] $pools,
+  Boolean $create_pool_user,
+  Boolean $create_pool_group,
 
   Boolean $generate_gridmapfile,
   String $gridmapfile_file,
@@ -128,14 +138,16 @@ class lcmaps (
       $pool_groups = [$pool_group]
     }
 
-    group { $pool_group:
-      ensure => present,
-      gid    => $pool_gid,
-    }
-    $pool_groups.each | $g | {
-      if !defined(Group[$g]) {
-        group { $g:
-          ensure => present,
+    if $create_pool_group {
+      group { $pool_group:
+        ensure => present,
+        gid    => $pool_gid,
+      }
+      $pool_groups.each | $g | {
+        if !defined(Group[$g]) {
+          group { $g:
+            ensure => present,
+          }
         }
       }
     }
@@ -145,14 +157,16 @@ class lcmaps (
       $id_str = sprintf('%03d', $id)
       $name = "${pool_name}${id_str}"
 
-      user { $name:
-        ensure     => present,
-        uid        => $pool_base_uid + $id,
-        gid        => $pool_gid,
-        groups     => $pool_groups,
-        comment    => "Mapped user for ${pool_vo}",
-        managehome => true,
-        require    => [Group[$pool_group]],
+      if $create_pool_user {
+        user { $name:
+          ensure     => present,
+          uid        => $pool_base_uid + $id,
+          gid        => $pool_gid,
+          groups     => $pool_groups,
+          comment    => "Mapped user for ${pool_vo}",
+          managehome => true,
+          require    => [Group[$pool_group]],
+        }
       }
 
       file { "${gridmapdir}/${name}":
