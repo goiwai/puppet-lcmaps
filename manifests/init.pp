@@ -153,8 +153,11 @@ class lcmaps (
     }
 
     range('1', $pool_size).each | $id | {
-
-      $id_str = sprintf('%03d', $id)
+      $id_fmt = '%03d'
+      if ($pool_size < 100) {
+        $id_fmt = '%02d'
+      }
+      $id_str = sprintf($id_fmt, $id)
       $name = "${pool_name}${id_str}"
 
       if $create_pool_user {
