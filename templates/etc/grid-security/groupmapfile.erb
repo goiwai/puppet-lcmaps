@@ -11,8 +11,13 @@
     @capability = "NULL"
   end
 -%>
+<% if @role == nil -%>
 "/<%=@vo_name%>/Role=<%=@role%>/Capability=<%=@capability%>" <%=@group%>
 "/<%=@vo_name%>" <%=@group%>
+<% else -%>
+"/<%=@vo_name%>/Role=<%=@role%>/Capability=<%=@capability%>" <%=@group%>
+"/<%=@vo_name%>/Role=<%=@role%>" <%=@group%>
+<% end -%>
 <%- 
 end
 -%>
