@@ -16,8 +16,6 @@ lcmaps::pools:
     group: 'testvodue'
     gid: 8100
     vo: 'test.vo.2'
-lcmaps::create_pool_user: true
-lcmaps::create_pool_group: true
 
 lcmaps::generate_gridmapfile: true
 lcmaps::gridmapfile_file: ''
