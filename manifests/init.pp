@@ -11,14 +11,20 @@
 #
 # @param pools
 #   The Array of pool accounts.
-#
+#   Some optional parameters added to the original module cnafsd-lcmaps:
 # @param create_pool_user
 #   If true (default), attempts to create pool accounts.
 #   If false, skip creating pool accounts -- a special switch for KEKCC, where the necessary pool accounts have already been created.
-#
 # @param create_pool_group
-#   If true (default), attempts to create pool accounts.
+#   If true (default), attempts to create a groupd for pool accounts.
 #   If false, skip creating groups for pool accounts -- a special switch for KEKCC, where the necessary pool accounts have already been created.
+# @param number_of_digits
+#   If 0 (default), attempts to define the minimum digit for pool accounts, e.g. three digits for 100 pool accounts like user012.
+#   If greater than 0, attempts to define the number of digits as specified, e.g. user0123, while setting 4 of number_of_digits.
+# @param first_number
+#   Creates a pool account starting with the first_number like user001 while setting 1 of first_number.
+# @param step_number
+#   A step value of pool accounts. Creates a pool account user001, then user003 for setting 2 of step_number.
 #
 # @param generate_gridmapfile
 #
@@ -76,8 +82,6 @@ class lcmaps (
   String $gridmapdir_mode,
 
   Array[Lcmaps::PoolData] $pools,
-  Boolean $create_pool_user,
-  Boolean $create_pool_group,
 
   Boolean $generate_gridmapfile,
   String $gridmapfile_file,
@@ -137,6 +141,31 @@ class lcmaps (
     } else {
       $pool_groups = [$pool_group]
     }
+    if has_key($pool, 'create_pool_user') {
+      $create_pool_user = $pool['create_pool_user']
+    } else {
+      $create_pool_user = true
+    }
+    if has_key($pool, 'create_pool_group') {
+      $create_pool_group = $pool['create_pool_group']
+    } else {
+      $create_pool_group = true
+    }
+    if has_key($pool, 'number_of_digits') {
+      $number_of_digits = $pool['number_of_digits']
+    } else {
+      $number_of_digits = 0
+    }
+    if has_key($pool, 'first_number') {
+      $first_number = $pool['first_number']
+    } else {
+      $first_number = 1
+    }
+    if has_key($pool, 'step_number') {
+      $step_number = $pool['step_number']
+    } else {
+      $step_number = 1
+    }
 
     if $create_pool_group {
       group { $pool_group:
@@ -152,13 +181,25 @@ class lcmaps (
       }
     }
 
-    range('1', $pool_size).each | $id | {
-      if ($pool_size < 100) {
-        $id_fmt = '%02d'
-      } else {
-        $id_fmt = '%03d'
-      }
-      $id_str = sprintf($id_fmt, $id)
+    debug("\$number_of_digits=${number_of_digits}")
+    debug("\$first_number=${first_number}")
+    $n = $first_number
+    $pool_numbers = range(0, $pool_size - 1).map | $i | {
+      $first_number + $step_number * $i
+    }
+    debug("\$pool_numbers=${pool_numbers}")
+    # $last_number = $pool_numbers[-1]
+    if ($number_of_digits == 0) {
+      $digit = String($pool_numbers[-1]).length
+    } else {
+      $digit = $number_of_digits
+    }
+    debug("\$digit=${digit}")
+    $id_format = "%0${digit}d"
+    debug("\$id_format=${id_format}")
+
+    $pool_numbers.each | $id | {
+      $id_str = sprintf($id_format, $id)
       $name = "${pool_name}${id_str}"
 
       if $create_pool_user {

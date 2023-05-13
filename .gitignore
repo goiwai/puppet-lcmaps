@@ -1,3 +1,13 @@
+.DS_Store
+note.md
+sandbox*.*
+sandbox/
+zzz*.*
+trash/
+._.DS_Store
+*.swp
+.history/
+
 .git/
 .*.sw[op]
 .metadata
