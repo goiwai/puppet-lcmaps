@@ -35,3 +35,4 @@ trash/
 .project
 .envrc
 /inventory.yaml
+.vscode/settings.json

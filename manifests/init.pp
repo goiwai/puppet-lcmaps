@@ -10,27 +10,28 @@
 #   The permissions on /etc/grid-security/gridmapdir
 #
 # @param pools
-#   The Array of pool accounts.
-#   Some optional parameters added to the original module cnafsd-lcmaps:
-# @param create_pool_user
-#   If true (default), attempts to create pool accounts.
-#   If false, skip creating pool accounts -- a special switch for KEKCC, where the necessary pool accounts have already been created.
-# @param create_pool_group
-#   If true (default), attempts to create a groupd for pool accounts.
-#   If false, skip creating groups for pool accounts -- a special switch for KEKCC, where the necessary pool accounts have already been created.
-# @param number_of_digits
-#   If 0 (default), attempts to define the minimum digit for pool accounts, e.g. three digits for 100 pool accounts like user012.
-#   If greater than 0, attempts to define the number of digits as specified, e.g. user0123, while setting 4 of number_of_digits.
-# @param first_number
-#   Creates a pool account starting with the first_number like user001 while setting 1 of first_number.
-# @param step_number
-#   A step value of pool accounts. Creates a pool account user001, then user003 for setting 2 of step_number.
+#   The hash of pool accounts. Some optional parameters are extended to
+#   the original module [cnafsd-lcmaps](https://forge.puppet.com/modules/cnafsd/lcmaps):
+#     `create_pool_user`:
+#        If true (default), attempts to create pool accounts.
+#        If false, skip creating pool accounts -- a special switch for KEKCC, where the necessary pool accounts have already been created.
+#     `create_pool_group`:
+#        If true (default), attempts to create a groupd for pool accounts.
+#        If false, skip creating groups for pool accounts
+#        -- a special switch for KEKCC, where the necessary pool accounts have already been created.
+#     `number_of_digits`:
+#        If 0 (default), attempts to define the minimum digit for pool accounts, e.g. three digits for 100 pool accounts like user012.
+#        If greater than 0, attempts to define the number of digits as specified, e.g. user0123, while setting 4 of number_of_digits.
+#     `first_number`:
+#        Creates a pool account starting with the first_number like user001 while setting 1 of first_number.
+#     `step_number`:
+#        A step value of pool accounts. Creates a pool account user001, then user003 for setting 2 of step_number.
 #
 # @param generate_gridmapfile
 #
 # @param gridmapfile_file
 #
-# @param generate_groumapfile
+# @param generate_groupmapfile
 #
 # @param groupmapfile_file
 #
@@ -100,9 +101,7 @@ class lcmaps (
 
   Boolean $manage_gsi_authz_file,
   String $gsi_authz_file,
-
 ) {
-
   $lcamps_rpms = ['lcmaps', 'lcmaps-without-gsi', 'lcmaps-plugins-basic', 'lcmaps-plugins-voms']
   package { $lcamps_rpms:
     ensure => latest,
@@ -126,7 +125,6 @@ class lcmaps (
   }
 
   $pools.each | $pool | {
-
     # mandatories
     $pool_name = $pool['name']
     $pool_group = $pool['group']
