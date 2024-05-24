@@ -134,32 +134,32 @@ class lcmaps (
     $pool_size = $pool['size']
 
     # optionals
-    if has_key($pool, 'groups') {
+    if 'groups' in $pool {
       $pool_groups = $pool['groups']
     } else {
       $pool_groups = [$pool_group]
     }
-    if has_key($pool, 'create_pool_user') {
+    if 'create_pool_user' in $pool {
       $create_pool_user = $pool['create_pool_user']
     } else {
       $create_pool_user = true
     }
-    if has_key($pool, 'create_pool_group') {
+    if 'create_pool_group' in $pool {
       $create_pool_group = $pool['create_pool_group']
     } else {
       $create_pool_group = true
     }
-    if has_key($pool, 'number_of_digits') {
+    if 'number_of_digits' in $pool {
       $number_of_digits = $pool['number_of_digits']
     } else {
       $number_of_digits = 0
     }
-    if has_key($pool, 'first_number') {
+    if 'first_number' in $pool {
       $first_number = $pool['first_number']
     } else {
       $first_number = 1
     }
-    if has_key($pool, 'step_number') {
+    if 'step_number' in $pool {
       $step_number = $pool['step_number']
     } else {
       $step_number = 1
