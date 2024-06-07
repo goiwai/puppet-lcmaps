@@ -12,6 +12,13 @@
 # @param pools
 #   The hash of pool accounts. Some optional parameters are extended to
 #   the original module [cnafsd-lcmaps](https://forge.puppet.com/modules/cnafsd/lcmaps):
+#   See also [`pooldata.pp`](pooldata.pp) for a declaration of the array parameters.
+# 
+#     `roles`:
+#        Optional[Array[String]]: if `role` is not set AND roles is set, 
+#        write out multiple roles for pool accounts and a single group in:
+#        `/etc/grid-security/ggrid-mapfile`
+#        `/etc/grid-security/groupmapfile`
 #     `create_pool_user`:
 #        If true (default), attempts to create pool accounts.
 #        If false, skip creating pool accounts -- a special switch for KEKCC, where the necessary pool accounts have already been created.

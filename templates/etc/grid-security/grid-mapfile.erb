@@ -1,26 +1,37 @@
 <%-
 @pools.each do | pool |
-  @vo_name=pool['vo']
-  @pool_name=pool['name']
-  @role=pool['role']
-  if @role == nil
-    @role1 = "/Role=NULL"
-    @role2 = ""
-  else
-    @role1 = "/Role=#{@role}"
-    @role2 = @role1
-  end
-  @capability=pool['capability']
-  if @capability == nil
-    @capability1 = "/Capability=NULL"
-    @capability2 = ""
-  else
+  @vo_name = pool['vo']
+  @pool_name = pool['name']
+  @role = pool['role']
+  @roles = pool['roles']
+  @capability = pool['capability']
+  @capability1 = "/Capability=NULL"
+  @capability2 = ""
+  @role1 = "/Role=NULL"
+  @role2 = ""
+
+  if @capability != nil
     @capability1 = "/Capability=#{@capability}"
     @capability2 = @capability1
   end
+
+  if @role != nil
+    @role1 = "/Role=#{@role}"
+    @role2 = @role1
+  end
+
+  if @role == nil and @roles != nil
+    @roles.each do | role |
+-%>
+"/<%=@vo_name%>/Role=<%=role%><%=@capability1%>" .<%=@pool_name%>
+"/<%=@vo_name%>/Role=<%=role%><%=@capability2%>" .<%=@pool_name%>
+<%-   
+    end
+  else
 -%>
 "/<%=@vo_name%><%=@role1%><%=@capability1%>" .<%=@pool_name%>
 "/<%=@vo_name%><%=@role2%><%=@capability2%>" .<%=@pool_name%>
-<%- 
+<%-
+  end
 end
 -%>
