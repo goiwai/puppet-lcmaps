@@ -74,4 +74,4 @@ Optional parameters:
 
 ## Limitations
 
-It works only on RedHat CentOS 7 distributions.
+It works only on RedHat 9 distributions but not on 7 any longer. To install this module for working with UMD-4 on RedHat 7 series, run `puppet module install iwai/lcmaps --version '< 1'`.
